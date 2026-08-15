@@ -5,3 +5,6 @@ packages:
 allowBuilds:
   sharp: true
   unrs-resolver: true
+  "@prisma/engines": true
+  prisma: true
+  bcrypt: true

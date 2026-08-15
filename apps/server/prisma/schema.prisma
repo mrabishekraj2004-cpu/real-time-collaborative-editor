@@ -1,0 +1,101 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum DocumentRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  documents            Document[]
+  documentPermissions  DocumentPermission[]
+  documentSnapshots    DocumentSnapshot[]
+  documentBranches     DocumentBranch[]
+}
+
+model Document {
+  id       String @id @default(cuid())
+  title    String
+  content  String @default("")
+  yjsState Bytes?
+  ownerId  String
+
+  owner       User                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  permissions DocumentPermission[]
+  snapshots   DocumentSnapshot[]
+  branches    DocumentBranch[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DocumentPermission {
+  id         String       @id @default(cuid())
+  documentId String
+  userId     String
+  role       DocumentRole
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([documentId, userId])
+  @@index([documentId])
+  @@index([userId])
+}
+
+model DocumentSnapshot {
+  id          String   @id @default(cuid())
+  documentId  String
+  createdById String
+  name        String
+  title       String
+  content     String   @default("")
+  yjsState    Bytes?
+  createdAt   DateTime @default(now())
+
+  document  Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdBy User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([createdById])
+  @@index([documentId, createdAt])
+}
+
+model DocumentBranch {
+  id             String   @id @default(cuid())
+  documentId     String
+  createdById    String
+  sourceSnapshotId String?
+  name           String
+  title          String
+  content        String   @default("")
+  yjsState       Bytes?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  document  Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  createdBy User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, name])
+  @@index([documentId])
+  @@index([createdById])
+  @@index([sourceSnapshotId])
+}

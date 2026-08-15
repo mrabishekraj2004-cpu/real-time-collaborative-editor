@@ -33,3 +33,17 @@ Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
+# Local development and assistant tooling
+.agents/
+.claude/
+.windsurf/
+skills-lock.json
+
+# Temporary collaboration test files
+socket-test*.js
+
+# Local backup files
+*.backup.ts
+*.backup.tsx
+*-current.ts
+*-current.tsx
