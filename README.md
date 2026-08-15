@@ -8,7 +8,243 @@ The application allows multiple users to create, edit, share, and collaborate on
 
 ---
 
-## Overview
+## Project Status
+
+This project is actively under development.
+
+The current repository contains the completed Phase 1 collaborative-document foundation. It provides the core of a real-time collaborative document workspace, including authentication, document creation and editing, rich-text editing, automatic synchronization, real-time multi-user collaboration, presence and collaborative cursors, sharing permissions, and initial document version management.
+
+The long-term goal is to evolve the project into an advanced collaborative document + diagram + structured knowledge workspace.
+
+Currently Implemented
+
+User registration and authentication
+
+Document creation and editing
+
+Rich-text editor
+
+Automatic document synchronization
+
+Real-time multi-user collaboration
+
+Online user presence
+
+Collaborative cursors
+
+Document sharing
+
+Owner, Editor, and Viewer permissions
+
+Permission-aware collaboration
+
+Document dashboard
+
+Saved document version checkpoints
+
+Branch-based document versioning
+
+Dark-mode workspace interface
+
+Planned Features
+
+Document Workspace
+
+Document rename and duplication
+
+Favorites
+
+Shared-document organization
+
+Trash, restore, and permanent deletion
+
+Advanced search and filtering
+
+Improved document metadata
+
+Improved autosave, session, and error states
+
+Collaboration and permission edge-case handling
+
+Advanced Diagram Editor
+
+Infinite canvas
+
+Shapes and connectors
+
+Selection and multi-selection
+
+Pan and zoom
+
+Resize and rotation
+
+Snapping and alignment guides
+
+Grouping and locking
+
+Layer ordering
+
+Clipboard operations
+
+Keyboard shortcuts
+
+Undo and redo
+
+Shape and connector styling
+
+Persistent diagrams
+
+Multiple pages
+
+Layers
+
+Connector routing and waypoints
+
+Custom connection points
+
+Reusable components
+
+Templates
+
+Rulers and grids
+
+Tables
+
+Advanced alignment and distribution tools
+
+Real-time collaborative diagram editing
+
+Software Engineering and Architecture Diagrams
+
+All 14 UML diagram types
+
+Entity-Relationship Diagrams (ERD)
+
+Database and schema modeling
+
+Data Flow Diagrams (DFD)
+
+Flowcharts
+
+Swimlane diagrams
+
+C4 architecture diagrams
+
+System architecture diagrams
+
+Network diagrams
+
+Cloud architecture diagrams
+
+API architecture and flow diagrams
+
+Microservices diagrams
+
+Event-driven architecture diagrams
+
+CQRS and event-sourcing diagrams
+
+Cache and load-balancing diagrams
+
+Failover architecture diagrams
+
+Infrastructure-as-Code diagrams
+
+Data pipeline diagrams
+
+Extended Diagram Libraries
+
+BPMN
+
+SIPOC
+
+Value Stream Maps
+
+SWOT
+
+PESTEL
+
+Porter's Five Forces
+
+Business Model Canvas
+
+Lean Canvas
+
+BCG Matrix
+
+Ansoff Matrix
+
+RACI
+
+Stakeholder maps
+
+Customer journey maps
+
+Sales and marketing funnels
+
+Service blueprints
+
+Consulting-style matrices and frameworks
+
+Electrical and electronics engineering diagrams
+
+Mechanical engineering diagrams
+
+Civil and structural engineering diagrams
+
+Biology, chemistry, and physics diagrams
+
+Earth and environmental science diagrams
+
+Healthcare and education diagrams
+
+Data science and machine-learning diagrams
+
+Advanced Collaboration and Knowledge Features
+
+Semantic Git-style document diffing
+
+Advanced document branching and version history
+
+Version restoration and branch comparison
+
+Citation management
+
+Citation and source relationship graphs
+
+Evidence links
+
+True multi-cursor editing
+
+Document-wide consistency tools
+
+Readability analysis
+
+Validation
+
+Outline and argument maps
+
+Content blocks
+
+Cross-references
+
+Structured knowledge relationships
+
+Comments and mentions
+
+Notifications
+
+Document-to-diagram relationships
+
+Backlinks
+
+Reusable content
+
+Advanced collaborative review workflows
+
+Note: Features listed under Planned Features describe the intended direction of the project and are not necessarily available in the current release.
+
+Overview**
 
 Real-Time Collaborative Editor is a software engineering project focused on building a modern collaborative workspace similar to the core document-editing experience provided by applications such as Google Docs.
 
@@ -155,10 +391,10 @@ The application is maintained as a monorepo:
 ```text
 collab-docs/
 ├── apps/
-│   ├── web/                 # Next.js frontend
-│   └── server/              # NestJS backend
+│   ├── web/                 # Next.js frontend
+│   └── server/              # NestJS backend
 ├── docs/
-│   └── screenshots/         # Project screenshots
+│   └── screenshots/         # Project screenshots
 ├── design/
 ├── docker-compose.yml
 ├── package.json
@@ -210,22 +446,22 @@ A simplified collaboration flow is:
 
 ```text
 User A
-   │
-   ▼
+   │
+   ▼
 Next.js + TipTap
-   │
-   ▼
+   │
+   ▼
 Yjs Collaborative Document
-   │
-   ▼
+   │
+   ▼
 Socket.IO
-   │
-   ▼
+   │
+   ▼
 NestJS Collaboration Gateway
-   │
-   ├──────────────┐
-   ▼              ▼
-User B          User C
+   │
+   ├──────────────┐
+   ▼              ▼
+User B          User C
 ```
 
 When multiple users open the same document, changes can be synchronized between connected clients.
@@ -559,57 +795,40 @@ Authentication secrets and database credentials should never be committed to the
 
 ## Development Roadmap
 
-The project is being developed incrementally.
+Phase 1 — Collaborative Document MVP
+Authentication, document editing, real-time collaboration, sharing, permissions, presence/cursors, and initial version management.
 
-### Phase 1 — Collaborative Document MVP
+Phase 2 — Complete Document Management
+Rename, duplicate, favorites, Shared, trash/restore/permanent delete, search, metadata, session/error states, and permission edge cases.
 
-Core authentication, document editing, collaboration, sharing, permissions, and initial version management.
+Phase 3 — Diagram Engine
+Infinite canvas, shapes, connectors, transforms, snapping, guides, grouping, layers, persistence, shortcuts, undo/redo, and collaboration architecture.
 
-**Status: Completed**
+Phase 4 — Software & IT Diagram Libraries
+UML, ERD, DFD, flowcharts, swimlanes, C4, system/network/cloud/API/microservices/event-driven/CQRS and infrastructure diagrams.
 
-### Phase 2 — Document Fundamentals
+Phase 5 — Advanced Diagram Editing
+Pages, layers, advanced routing and waypoints, connection points, reusable components, templates, rulers, grids, tables, export, and real-time diagram collaboration.
 
-Document organization, rename, duplicate, favorites, shared documents, trash, restore, permanent deletion, search, metadata, improved session handling, and permission edge cases.
+Phase 6 — Extended Diagram Libraries
+Business, management, engineering, science, healthcare, education, and data-science diagram families.
 
-### Phase 3 — Diagram Engine
+Phase 7 — Structure, Review, Sources & Advanced Versions
+Outline, argument maps, content blocks, cross-references, consistency/readability tools, validation, citations, source graphs, evidence links, semantic diffing, and expanded version management.
 
-Core reusable canvas, shapes, connectors, selection, transforms, snapping, grouping, layers, persistence, and collaboration architecture.
+Phase 8 — Advanced Collaboration & Knowledge Relationships
+Comments, mentions, notifications, true multi-cursor workflows, backlinks, document-to-diagram relationships, reusable content, and collaborative review workflows.
 
-### Phase 4 — Software and IT Diagram Libraries
-
-UML, ERD, C4, DFD, architecture, network, database, DevOps, and related technical diagram libraries.
-
-### Phase 5 — Advanced Diagram Editing
-
-Advanced routing, reusable components, templates, shape libraries, multi-page diagrams, metadata, export, and real-time diagram collaboration.
-
-### Phase 6 — Extended Diagram Libraries
-
-Business, management, engineering, science, healthcare, education, and data-science diagrams.
-
-### Phase 7 — Structure, Review, Sources and Advanced Versions
-
-Functional document structure, analysis, citations, source relationships, validation, semantic comparison, and expanded version management.
-
-### Phase 8 — Advanced Collaboration
-
-Comments, mentions, notifications, document-to-diagram relationships, backlinks, reusable content, and collaborative review workflows.
-
-### Phase 9 — Workspace Productivity
-
+Phase 9 — Workspace Productivity
 Global search, organization, templates, command palette, filtering, keyboard navigation, and workspace improvements.
 
-### Phase 10 — Production Hardening
-
+Phase 10 — Production Hardening
 Import/export, security, WebSocket scaling, performance optimization, recovery, database optimization, and production infrastructure.
 
-### Phase 11 — Production Release
-
+Phase 11 — Production Release
 Comprehensive testing, CI/CD, deployment, monitoring, accessibility, performance validation, documentation, and final release preparation.
 
----
-
-## Project Status
+Project Status**
 
 The current repository represents the completed **Phase 1 collaborative-document foundation** and the starting point for the larger platform.
 
