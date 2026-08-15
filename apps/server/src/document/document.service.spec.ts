@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CollaborationGateway } from '../collaboration/collaboration.gateway';
 import { PrismaService } from '../prisma/prisma.service';
 import { DocumentService } from './document.service';
 
@@ -12,6 +13,12 @@ describe('DocumentService', () => {
         {
           provide: PrismaService,
           useValue: {},
+        },
+        {
+          provide: CollaborationGateway,
+          useValue: {
+            updateUserDocumentRole: jest.fn(),
+          },
         },
       ],
     }).compile();

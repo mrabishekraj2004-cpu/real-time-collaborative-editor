@@ -689,22 +689,35 @@ export class CollaborationGateway
       return;
     }
 
-    if (
-      access.role !==
-        DocumentRole.OWNER &&
-      access.role !==
-        DocumentRole.EDITOR
-    ) {
-      client.emit(
-        'collaboration-error',
-        {
-          message:
-            'You do not have permission to edit this document',
-        },
-      );
+    const currentAccess =
+  await this.getCollaborationAccess(
+    authenticatedUser.id,
+    data.documentId,
+    branchId,
+  );
 
-      return;
-    }
+if (
+  !currentAccess ||
+  (
+    currentAccess.role !==
+      DocumentRole.OWNER &&
+    currentAccess.role !==
+      DocumentRole.EDITOR
+  )
+) {
+  client.emit(
+    'collaboration-error',
+    {
+      message:
+        'You do not have permission to edit this document',
+    },
+  );
+
+  return;
+}
+
+access.role =
+  currentAccess.role;
 
     if (
       !Array.isArray(
@@ -1092,6 +1105,98 @@ export class CollaborationGateway
     }
 
     return null;
+  }
+
+  updateUserDocumentRole(
+    documentId: string,
+    userId: string,
+    role: DocumentRole | null,
+  ) {
+    for (
+      const [
+        socketId,
+        access,
+      ] of this.clientDocuments
+    ) {
+      if (
+        access.documentId !==
+          documentId ||
+        access.userId !==
+          userId
+      ) {
+        continue;
+      }
+
+      const socket =
+        this.server.sockets.sockets.get(
+          socketId,
+        );
+
+      if (
+        role ===
+        null
+      ) {
+        this.removeUserFromRoom(
+          access,
+          socketId,
+        );
+
+        this.clientDocuments.delete(
+          socketId,
+        );
+
+        socket?.leave(
+          access.roomId,
+        );
+
+        socket?.emit(
+          'access-revoked',
+          {
+            documentId,
+            branchId:
+              access.branchId,
+          },
+        );
+
+        continue;
+      }
+
+      access.role =
+        role;
+
+      const users =
+        this.documentUsers.get(
+          access.roomId,
+        );
+
+      const onlineUser =
+        users?.get(
+          socketId,
+        );
+
+      if (
+        onlineUser
+      ) {
+        onlineUser.role =
+          role;
+      }
+
+      socket?.emit(
+        'permission-changed',
+        {
+          documentId,
+          branchId:
+            access.branchId,
+          role,
+        },
+      );
+
+      this.broadcastOnlineUsers(
+        access.documentId,
+        access.branchId,
+        access.roomId,
+      );
+    }
   }
 
   private addUserToRoom(

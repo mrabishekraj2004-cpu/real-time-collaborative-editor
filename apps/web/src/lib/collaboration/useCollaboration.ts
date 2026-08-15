@@ -1,6 +1,7 @@
 import {
   useEffect,
   useMemo,
+  useState,
 } from "react";
 
 import type {
@@ -108,6 +109,27 @@ interface JoinedDocumentEvent {
     | "VIEWER";
 }
 
+interface PermissionChangedEvent {
+  documentId: string;
+
+  branchId?:
+    | string
+    | null;
+
+  role:
+    | "OWNER"
+    | "EDITOR"
+    | "VIEWER";
+}
+
+interface AccessRevokedEvent {
+  documentId: string;
+
+  branchId?:
+    | string
+    | null;
+}
+
 interface CollaborationError {
   message: string;
 }
@@ -169,6 +191,23 @@ export function useCollaboration({
   user,
   onOnlineUsersChange,
 }: UseCollaborationOptions) {
+  const [
+    role,
+    setRole,
+  ] =
+    useState<
+      | "OWNER"
+      | "EDITOR"
+      | "VIEWER"
+      | null
+    >(null);
+
+  const [
+    accessRevoked,
+    setAccessRevoked,
+  ] =
+    useState(false);
+
   const awareness =
     useMemo(
       () =>
@@ -522,6 +561,15 @@ export function useCollaboration({
         hasJoinedRoom =
           true;
 
+        setAccessRevoked(
+          false,
+        );
+
+        setRole(
+          data.role ??
+            null,
+        );
+
         sendLocalAwarenessState();
 
         socket.emit(
@@ -530,6 +578,79 @@ export function useCollaboration({
             documentId,
             branchId,
           },
+        );
+      };
+
+    const handlePermissionChanged =
+      (
+        data:
+          PermissionChangedEvent,
+      ) => {
+        if (
+          !isSameTarget(
+            data.documentId,
+            data.branchId,
+            documentId,
+            branchId,
+          )
+        ) {
+          return;
+        }
+
+        setRole(
+          data.role,
+        );
+      };
+
+    const handleAccessRevoked =
+      (
+        data:
+          AccessRevokedEvent,
+      ) => {
+        if (
+          !isSameTarget(
+            data.documentId,
+            data.branchId,
+            documentId,
+            branchId,
+          )
+        ) {
+          return;
+        }
+
+        hasJoinedRoom =
+          false;
+
+        setAccessRevoked(
+          true,
+        );
+
+        setRole(
+          null,
+        );
+
+        awareness.setLocalState(
+          null,
+        );
+
+        const remoteClientIds =
+          getRemoteAwarenessClientIds(
+            awareness,
+          );
+
+        if (
+          remoteClientIds.length >
+          0
+        ) {
+          removeAwarenessStates(
+            awareness,
+            remoteClientIds,
+            REMOTE_AWARENESS_ORIGIN,
+          );
+        }
+
+        onOnlineUsersChange?.(
+          [],
         );
       };
 
@@ -620,6 +741,16 @@ export function useCollaboration({
     socket.on(
       "joined-document",
       handleJoinedDocument,
+    );
+
+    socket.on(
+      "permission-changed",
+      handlePermissionChanged,
+    );
+
+    socket.on(
+      "access-revoked",
+      handleAccessRevoked,
     );
 
     socket.on(
@@ -751,6 +882,16 @@ export function useCollaboration({
       );
 
       socket.off(
+        "permission-changed",
+        handlePermissionChanged,
+      );
+
+      socket.off(
+        "access-revoked",
+        handleAccessRevoked,
+      );
+
+      socket.off(
         "join-document-error",
         handleJoinError,
       );
@@ -778,5 +919,7 @@ export function useCollaboration({
 
   return {
     awareness,
+    role,
+    accessRevoked,
   };
 }

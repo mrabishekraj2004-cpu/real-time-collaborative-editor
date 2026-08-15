@@ -210,6 +210,46 @@ export function ShareDialog({
     }
   }
 
+  async function handleRoleChange(
+    userEmail: string,
+    newRole:
+      | "EDITOR"
+      | "VIEWER",
+  ) {
+    if (!accessToken) {
+      setErrorMessage(
+        "You must be signed in to change access",
+      );
+      return;
+    }
+
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      await shareDocument(
+        accessToken,
+        documentId,
+        userEmail,
+        newRole,
+      );
+
+      await refreshSharedUsers();
+
+      setSuccessMessage(
+        newRole === "EDITOR"
+          ? "User can now edit this document"
+          : "User now has view-only access",
+      );
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to change user access",
+      );
+    }
+  }
+
   async function handleRemoveAccess(
     userId: string,
     userName: string,
@@ -728,19 +768,47 @@ export function ShareDialog({
                           </p>
                         </div>
 
-                        <span
+                        <select
+                          value={
+                            sharedUser.role
+                          }
+                          onChange={(event) =>
+                            void handleRoleChange(
+                              sharedUser
+                                .user.email,
+                              event.target
+                                .value as
+                                | "EDITOR"
+                                | "VIEWER",
+                            )
+                          }
                           className="
-                            hidden
-                            text-[12px]
-                            text-[var(--text-tertiary)]
-                            sm:block
+                            h-8
+                            rounded-[6px]
+                            border
+                            border-[var(--border-default)]
+                            bg-[var(--surface-subtle)]
+                            px-2
+                            text-[11px]
+                            font-medium
+                            text-[var(--text-secondary)]
+                            outline-none
+                            transition-colors
+                            duration-150
+
+                            hover:border-[var(--border-strong)]
+
+                            focus:border-[var(--accent)]
                           "
                         >
-                          {sharedUser.role ===
-                          "EDITOR"
-                            ? "Can edit"
-                            : "Can view"}
-                        </span>
+                          <option value="EDITOR">
+                            Can edit
+                          </option>
+
+                          <option value="VIEWER">
+                            Can view
+                          </option>
+                        </select>
 
                         <button
                           type="button"

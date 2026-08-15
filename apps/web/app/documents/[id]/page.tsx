@@ -464,6 +464,9 @@ function CollaborativeDocumentEditor({
   user,
   accessToken,
 }: CollaborativeDocumentEditorProps) {
+  const router =
+    useRouter();
+
   const [
     branches,
     setBranches,
@@ -534,12 +537,6 @@ function CollaborativeDocumentEditor({
         branchId,
       ],
     );
-
-  const canEdit =
-    document.role ===
-      "OWNER" ||
-    document.role ===
-      "EDITOR";
 
   const canManageSharing =
     document.role ===
@@ -698,6 +695,9 @@ function CollaborativeDocumentEditor({
 
   const {
     awareness,
+    role:
+      collaborationRole,
+    accessRevoked,
   } = useCollaboration({
     documentId:
       document.id,
@@ -712,6 +712,29 @@ function CollaborativeDocumentEditor({
     onOnlineUsersChange:
       handleOnlineUsersChange,
   });
+
+  useEffect(() => {
+    if (
+      accessRevoked
+    ) {
+      router.replace(
+        "/documents",
+      );
+    }
+  }, [
+    accessRevoked,
+    router,
+  ]);
+
+  const effectiveRole =
+    collaborationRole ??
+    document.role;
+
+  const canEdit =
+    effectiveRole ===
+      "OWNER" ||
+    effectiveRole ===
+      "EDITOR";
 
   const displayTitle =
     activeBranch

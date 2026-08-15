@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 
 import { DocumentRole } from '../../generated/prisma/client';
+import { CollaborationGateway } from '../collaboration/collaboration.gateway';
 import { PrismaService } from '../prisma/prisma.service';
 
 import { CreateBranchDto } from './dto/create-branch.dto';
@@ -18,6 +19,7 @@ import { UpdateDocumentDto } from './dto/update-document.dto';
 export class DocumentService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly collaborationGateway: CollaborationGateway,
   ) {}
 
   async create(
@@ -277,6 +279,12 @@ export class DocumentService {
         },
       });
 
+    this.collaborationGateway.updateUserDocumentRole(
+      documentId,
+      invitedUser.id,
+      permission.role,
+    );
+
     return {
       message:
         'Document shared successfully',
@@ -379,6 +387,12 @@ export class DocumentService {
         'Document permission was not found',
       );
     }
+
+    this.collaborationGateway.updateUserDocumentRole(
+      documentId,
+      sharedUserId,
+      null,
+    );
 
     return {
       message:

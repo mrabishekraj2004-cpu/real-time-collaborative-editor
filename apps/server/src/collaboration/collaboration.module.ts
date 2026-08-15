@@ -6,5 +6,6 @@ import { CollaborationGateway } from './collaboration.gateway';
 @Module({
   imports: [PrismaModule],
   providers: [CollaborationGateway],
+  exports: [CollaborationGateway],
 })
 export class CollaborationModule {}
